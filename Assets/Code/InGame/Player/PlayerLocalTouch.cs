@@ -5,15 +5,6 @@ using System;
 
 public partial class PlayerLocal : PlayerBase
 {
-    public enum TOUCH_STATE
-    {
-        LEFT,
-        RIGHT,
-        END
-    }
-    
-    private BitArray m_TouchState = new BitArray((int)TOUCH_STATE.END, false);    
-
     //[Conditional("UNITY_EDITOR"), Conditional("UNITY_STANDALONE_WIN")]
     public void FixedUpdateInputMove()
     {
@@ -51,27 +42,21 @@ public partial class PlayerLocal : PlayerBase
 
         if (IsLeftSteer && !IsRightSteer)
         {
-            //m_fCurrentSteer = m_fCurrentSteer > m_ConstSteerStart ? m_ConstSteerStart : m_fCurrentSteer;
-            //m_fCurrentSteer -= m_FixedUpdateDeltaTime / m_fSteerIncreaseTime;
             m_fCurrentSteer = -1;
 
         }
         else if (!IsLeftSteer && IsRightSteer)
         {
-            //m_fCurrentSteer = m_fCurrentSteer < -m_ConstSteerStart ? -m_ConstSteerStart : m_fCurrentSteer;
-            //m_fCurrentSteer += m_FixedUpdateDeltaTime / m_fSteerIncreaseTime;
             m_fCurrentSteer = 1;
         }
         else if (IsLeftSteer && IsRightSteer)
         {
-            if (m_fCurrentSteer < 0) m_fCurrentSteer += m_FixedUpdateDeltaTime / m_fSteerIncreaseTime;
-            if (m_fCurrentSteer > 0) m_fCurrentSteer -= m_FixedUpdateDeltaTime / m_fSteerIncreaseTime;
+            m_fCurrentSteer = 0;
         }
 
         bool ConditionSteer = !IsRightSteer && !IsLeftSteer;
         if (ConditionSteer)
         {
-            //m_fCurrentSteer = m_fCurrentSteer * 0.2f;
             m_fCurrentSteer = 0;
         }
 

@@ -7,10 +7,6 @@ public class PlayerBase : MonoBehaviour
 {
     private NewProj.PlayerType m_ePlayerType = NewProj.PlayerType.LOCAL;
 
-
-    // external transform components ----------------------------
-    protected Transform m_CameraTarget;
-
     // cached components ------------------------------------    
     protected GameObject m_GameObj;
     protected Transform m_Transform;
@@ -38,14 +34,8 @@ public class PlayerBase : MonoBehaviour
     private Vector3 m_GroundedNormal = Vector3.up;
     private bool m_bGroundHitSuccess = false;
 
-    private Vector3 m_vPrePos = new Vector3(0, 0, 0);
     protected bool m_IsMove = false;
-    public bool IsMove
-    {
-        get { return m_IsMove; }
-        set { m_IsMove = value; }
-    }
-
+    
     #region Get / Set
     public NewProj.PlayerType ePlayerType
     {
@@ -53,10 +43,10 @@ public class PlayerBase : MonoBehaviour
         set { m_ePlayerType = value; }
     }
 
-    public Transform CameraTarget
+    public bool IsMove
     {
-        get { return m_CameraTarget; }   
-        private set { m_CameraTarget = value; }
+        get { return m_IsMove; }
+        set { m_IsMove = value; }
     }
 
     public RaycastHit GroundHitData
@@ -83,9 +73,7 @@ public class PlayerBase : MonoBehaviour
         m_Transform = transform;
         m_RigidBody = GetComponent<Rigidbody>();
         m_GameObj = gameObject;
-
         m_CharacterController = GetComponent<CharacterController>();
-
         m_GroundHitData = new RaycastHit();
     }
 
@@ -162,7 +150,7 @@ public class PlayerBase : MonoBehaviour
         m_GroundedNormal = m_bGroundHitSuccess ? m_GroundHitData.normal : Vector3.up;  ////m_GroundHitData.normal = The normal of the surface the ray hit          
     }
 
-    void OnCollisionEnter(Collision InCollisionInfo)
+    void OnControllerColliderHit(ControllerColliderHit hit)
     {
 
     }
