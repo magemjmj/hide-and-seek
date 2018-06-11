@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 14
-  productGUID: b770c902477ddc54883a9aac94372f7c
+  productGUID: c810794200b0c964f82974ee96b41df0
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   defaultScreenOrientation: 4
@@ -12,7 +12,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: hide-and-seek
+  productName: New Unity Project
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -548,7 +548,13 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
   webGLCompressionFormat: 1
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: CROSS_PLATFORM_INPUT
+    4: CROSS_PLATFORM_INPUT;MOBILE_INPUT
+    7: CROSS_PLATFORM_INPUT;MOBILE_INPUT
+    14: MOBILE_INPUT
+    17: MOBILE_INPUT
+    20: MOBILE_INPUT
   platformArchitecture: {}
   scriptingBackend: {}
   incrementalIl2cppBuild: {}
@@ -557,14 +563,14 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: hide-and-seek
+  metroPackageName: New Unity Project
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: hide-and-seek
+  metroApplicationDescription: New Unity Project
   wsaImages: {}
   metroTileShortName: 
   metroCommandLineArgsFile: 
@@ -633,9 +639,9 @@ PlayerSettings:
   cloudServicesEnabled: {}
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 9821175c-8176-4d1c-8d31-0fab0c72689e
-  projectName: hide-and-seek
-  organizationId: choijb
+  cloudProjectId: 9b196298-1642-4778-92d0-65146a2e2e05
+  projectName: New Unity Project (2)
+  organizationId: lim-yong-jin
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
