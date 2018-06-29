@@ -3,63 +3,56 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public partial class PlayerLocal : PlayerBase
+public class PlayerLocalTouch : PlayerBehaviour
 {
-    //[Conditional("UNITY_EDITOR"), Conditional("UNITY_STANDALONE_WIN")]
-    public void FixedUpdateInputMove()
+    public PlayerLocalTouch(PlayerBase PlayerBase) : base(PlayerBase)
     {
-        if (!m_IsMove)
-            return;
-        
-        m_Transform.forward = new Vector3(m_fCurrentSteer, 0, m_fCurrentThrottle);
-
-        Vector3 velocity = new Vector3(0, 0, 1f);
-        velocity = transform.TransformDirection(velocity);
-        Vector3 vForce = velocity * 6f * m_FixedUpdateDeltaTime;
-        
-        vForce.y -= 15.0f * m_FixedUpdateDeltaTime;
-
-        if (m_CharacterController)
-            m_CharacterController.Move(vForce);
     }
 
-    public void FixedUpdateInput()
+    public override void Update()
+    {
+        UpdateInput();
+    }
+
+    void UpdateInput()
     {
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-        m_IsMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow);
+        PlayerBase.m_IsMove = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow);
 
-        if(Input.GetKey(KeyCode.UpArrow))
+        PlayerBase.m_fCurrentThrottle = 0f;
+        if (Input.GetKey(KeyCode.UpArrow))
         {
-            VerticalMove(1f);
+            PlayerBase.m_fCurrentThrottle = 1f;
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            VerticalMove(-1f);
-        }        
-#endif
+            PlayerBase.m_fCurrentThrottle = -1f;            
+        }
+
         bool IsLeftSteer = Input.GetKey(KeyCode.LeftArrow);
         bool IsRightSteer = Input.GetKey(KeyCode.RightArrow);
 
         if (IsLeftSteer && !IsRightSteer)
         {
-            m_fCurrentSteer = -1;
+            PlayerBase.m_fCurrentDir = -1;
 
         }
         else if (!IsLeftSteer && IsRightSteer)
         {
-            m_fCurrentSteer = 1;
+            PlayerBase.m_fCurrentDir = 1;
         }
         else if (IsLeftSteer && IsRightSteer)
         {
-            m_fCurrentSteer = 0;
+            PlayerBase.m_fCurrentDir = 0;
         }
 
         bool ConditionSteer = !IsRightSteer && !IsLeftSteer;
         if (ConditionSteer)
         {
-            m_fCurrentSteer = 0;
+            PlayerBase.m_fCurrentDir = 0;
         }
 
-        m_fCurrentSteer = Mathf.Clamp(m_fCurrentSteer, -1.0f, 1.0f);
+        PlayerBase.m_fCurrentDir = Mathf.Clamp(PlayerBase.m_fCurrentDir, -1.0f, 1.0f);
+#endif
     }
 }

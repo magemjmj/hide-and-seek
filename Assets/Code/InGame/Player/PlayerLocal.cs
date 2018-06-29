@@ -3,36 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class PlayerLocal : PlayerBase// , IEnumerable
+public class PlayerLocal : PlayerBase// , IEnumerable
 {
-    protected override void Start()
+    protected override void Awake()
     {
-        base.Start();
+        base.Awake();
 
-        EnableThrottle(false);
-    }
-
-    protected override void Update()
-    {
-        UpdateDeltaTimeBase();
-
-        base.Update();
+        m_ListPlayerBehaviour.Add(new PlayerLocalTouch(GetComponent<PlayerBase>()));
+        m_ListPlayerBehaviour.Add(new PlayerMove(GetComponent<PlayerBase>()));
     }
 
     protected override void FixedUpdate()
-    {
-        if (InGameGlobal.m_InGameGM == null || !InGameGlobal.GetInGameState().IsGameState(InGameState.States.PLAY))
-            return;
-        
-        m_fCurrentThrottle = m_bDisableThrottleInput ? 0f : 1f;
+    {        
 
-        FixedUpdateDeltaTimeBase();
-        base.FixedUpdate();
-        
-        FixedUpdateInput();
-        FixedUpdateInputMove();
-
-        //FixedUpdateSteeringBase();
-        //FixedUpdateThrottleBase();
+        base.FixedUpdate();                          
     }
 }

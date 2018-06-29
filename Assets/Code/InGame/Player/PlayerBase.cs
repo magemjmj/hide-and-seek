@@ -3,70 +3,33 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+
 public class PlayerBase : MonoBehaviour
 {
-    private NewProj.PlayerType m_ePlayerType = NewProj.PlayerType.LOCAL;
+    public NewProj.PlayerType m_ePlayerType { get; set; }
 
-    // cached components ------------------------------------    
-    protected GameObject m_GameObj;
-    protected Transform m_Transform;
-    protected Rigidbody m_RigidBody;
-    protected CharacterController m_CharacterController;
+    // cached components ------------------------------------        
+    public GameObject m_GameObj { get; set; }
+    public Transform m_Transform { get; set; }
+    public Rigidbody m_RigidBody { get; set; }
+    public CharacterController m_CharacterController { get; set; }
 
-    protected float m_fCurrentSteer;
     public float m_fCurrentThrottle { get; set; }
-    protected float m_fPreSteerAngle;
-
-    protected float m_fSteerIncreaseTime = 0.2f;
-
-    // drive flag --------------------------------------------------
-    protected bool m_bDisableThrottleInput = false;
-    protected bool m_bDisableSteerInput = false;
 
     // for script Update control ----------------------------------
-    protected float m_UpdateDeltaTime;
-    protected float m_FixedUpdateDeltaTime;
+    public float m_UpdateDeltaTime { get; set; }
+    public float m_FixedUpdateDeltaTime { get; set; }
     // constants ---------------------------------------------------   
-    protected const float m_ConstSteerStart = 0.35f;
     protected const float m_ConstGroundNormalValidHeight = 2.5f;
 
     private RaycastHit m_GroundHitData;
     private Vector3 m_GroundedNormal = Vector3.up;
     private bool m_bGroundHitSuccess = false;
 
-    protected bool m_IsMove = false;
-    
-    #region Get / Set
-    public NewProj.PlayerType ePlayerType
-    {
-        get { return m_ePlayerType; }
-        set { m_ePlayerType = value; }
-    }
+    protected List<PlayerBehaviour> m_ListPlayerBehaviour;    
 
-    public bool IsMove
-    {
-        get { return m_IsMove; }
-        set { m_IsMove = value; }
-    }
-
-    public RaycastHit GroundHitData
-    {
-        get { return m_GroundHitData; }
-        private set { m_GroundHitData = value; }
-    }
-
-    public Vector3 GroundedNormal
-    {
-        get { return m_GroundedNormal; }
-        set { m_GroundedNormal = value; }
-    }
-
-    public bool bGroundHitSuccess
-    {
-        get { return m_bGroundHitSuccess; }
-        set { m_bGroundHitSuccess = value; }
-    }
-#endregion
+    public bool m_IsMove { get; set; }
+    public float m_fCurrentDir { get; set; }
 
     protected virtual void Awake()
     {
@@ -75,23 +38,47 @@ public class PlayerBase : MonoBehaviour
         m_GameObj = gameObject;
         m_CharacterController = GetComponent<CharacterController>();
         m_GroundHitData = new RaycastHit();
+        m_ListPlayerBehaviour = new List<PlayerBehaviour>();        
     }
 
     // Use this for initialization
     protected virtual void Start()
     {
-        //IDisposable
-        //IComparable
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
+        if (InGameGlobal.m_InGameGM == null || !InGameGlobal.GetInGameState().IsGameState(InGameState.States.PLAY))
+            return;
+
+        UpdateDeltaTimeBase();
+
+        foreach (PlayerBehaviour ABehavior in m_ListPlayerBehaviour)
+        {
+            ABehavior.Update();
+        }        
     }
 
     protected virtual void FixedUpdate()
     {
-        
+        if (InGameGlobal.m_InGameGM == null || !InGameGlobal.GetInGameState().IsGameState(InGameState.States.PLAY))
+            return;
+
+        FixedUpdateDeltaTimeBase();
+
+        foreach (PlayerBehaviour ABehavior in m_ListPlayerBehaviour)
+        {
+            ABehavior.FixedUpdate();
+        }
+    }
+
+    protected virtual void LateUpdate()
+    {
+        foreach (PlayerBehaviour ABehavior in m_ListPlayerBehaviour)
+        {
+            ABehavior.LateUpdate();
+        }
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -104,40 +91,6 @@ public class PlayerBase : MonoBehaviour
     protected void FixedUpdateDeltaTimeBase()
     {
         m_FixedUpdateDeltaTime = Time.fixedDeltaTime;
-    }
-
-    protected void FixedUpdateThrottleBase()
-    {
-        //Vector3 velocity = new Vector3(0, 0, m_fCurrentThrottle);
-        //velocity = transform.TransformDirection(velocity);
-        //velocity *= 6;
-        //velocity *= m_FixedUpdateDeltaTime;
-        //m_Transform.position += velocity;
-
-        //Vector3 vCurpos = m_vPrePos + velocity;
-        //m_Transform.localPosition = vCurpos;        
-        //m_vPrePos = m_Transform.localPosition;
-
-        Vector3 vForce = m_fCurrentThrottle * m_Transform.forward * 6f * m_FixedUpdateDeltaTime;
-        //Vector3 vCurpos = m_vPrePos + vForce;
-        //Vector3 vCurpos = m_vPrePos + velocity;
-
-        // 임시 중력
-        vForce.y -= 15.0f * m_FixedUpdateDeltaTime;
-
-        if (m_CharacterController)
-            m_CharacterController.Move(vForce);
-    }
-
-    protected void FixedUpdateSteeringBase()
-    {
-        if (m_fCurrentSteer == 0.0f)
-            return;
-
-        float fTurnDegree = 90f;      
-        float fAngle = fTurnDegree * Time.deltaTime * m_fCurrentSteer;
-        
-        m_Transform.Rotate(m_Transform.up, fAngle);
     }
 
     // -------------------------------------------------------------------------------------------------
@@ -163,19 +116,8 @@ public class PlayerBase : MonoBehaviour
         InObject.gameObject.SetActive(false);
     }
 
-    protected void VerticalMove(float move_value)
-    {
-        m_fCurrentThrottle = move_value;
-    }
-
-    public void EnableThrottle(bool InEnable)
-    {
-        m_bDisableThrottleInput = !InEnable;
-    }
-
     public void EndState()
     {
-        EnableThrottle(false);
-        m_fCurrentSteer = 0.0f;
+        m_fCurrentDir = 0.0f;
     }
 }

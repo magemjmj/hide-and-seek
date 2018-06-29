@@ -9,9 +9,6 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField]
     private float m_fHeight = 8.0f;
 
-    private float rotationDamping = 3.0f;
-    private float heightDamping = 0.6f;
-
     [SerializeField]
     private Vector3 m_CameraAngle;
 

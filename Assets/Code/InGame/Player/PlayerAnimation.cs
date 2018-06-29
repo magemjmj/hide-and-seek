@@ -20,7 +20,7 @@ public class PlayerAnimation : MonoBehaviour
 		
 	void Update ()
     {
-        if (m_Player.IsMove)
+        if (m_Player.m_IsMove)
             m_Animator.SetBool("Walk", true);
         else
             m_Animator.SetBool("Walk", false);
